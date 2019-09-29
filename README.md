@@ -19,9 +19,8 @@ import scala.concurrent.duration._
 
 val streamName    = "my-stream-name"
 val reader        = new FuckingKinesisReader(Region.EU_CENTRAL_1)
-val shardIterator = Model.LATEST
 
-reader.startListening(streamName, shardIterator)(1 second, 1 second) { record =>
+reader.startListening(streamName, Model.LATEST)(1 second, 1 second) { record =>
   // do something with record!
 }
 
@@ -60,3 +59,21 @@ There are a few examples that you can run using `sbt`:
 ```sbt
 sbt:fuckingkinesis> runMain examples.ReadAndWriteExample
 ```
+
+## Mental Model
+
+* Kinesis has several **streams** (think: topics). 
+* They can be **sharded** (think: distributed) across different computers.
+* A **record** (think: message) has a **shardKey** that determines the **shard**.
+* Every **record** has a **sequenceNumber** that is unique within **its shard** (not globally!).
+* To make sure you get _every_ message, you have to make use of the **shardIterator**.
+* Whenever you get one or more messages, you also get the **updated shardIterator**.
+* In the next read request, you send the latest **shardIterator** and request everything that's newer.
+
+For the initial read, there are different **shardIterators** to choose from:
+
+* `LATEST` — from now on
+* `TRIM_HORIZON` — from the beginning of the stream (max 7 days, default 24h)
+* `AT_TIMESTAMP(timestamp)` — for example now minus 5 minutes
+* `AFTER_SEQUENCE_NUMBER(sequenceNumber)` — if you stored that in a database
+* `AT_SEQUENCE_NUMBER(sequenceNumber)` — if you stored that in a database and don't trust Kinesis
