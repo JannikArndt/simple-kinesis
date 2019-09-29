@@ -49,7 +49,7 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
       shardIterators: Seq[(Shard, String)] <- fuckingKinesisWrapper.getShardIterators(streamName, shards, shardIterator)
     } yield shardIterators
 
-    requestInitialIterators.map(iterators => iterators.map(res => State(res._1, res._2, Seq[KinesisRecord]().empty)))
+    requestInitialIterators.map(iterators => iterators.map(res => State(res._1, res._2, Seq[KinesisRecord]())))
   }
 
   def startListening(streamName: String, shardIterator: ShardIterator)(
