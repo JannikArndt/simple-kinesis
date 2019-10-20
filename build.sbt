@@ -1,4 +1,7 @@
-lazy val root = (project in file("."))
+Global / onChangedBuildSource := ReloadOnSourceChanges
+ThisBuild / turbo := true
+
+lazy val simplekinesis = (project in file("simple-kinesis"))
   .settings(
     name := "simple-kinesis",
     organization := "de.jannikarndt",
@@ -26,8 +29,14 @@ lazy val root = (project in file("."))
     libraryDependencies ++= dependencies
   )
 
-Global / onChangedBuildSource := ReloadOnSourceChanges
-ThisBuild / turbo := true
+lazy val root = (project in file(".")).aggregate(simplekinesis, examples)
+
+lazy val examples = (project in file("examples"))
+  .settings(
+    scalaVersion := "2.13.1",
+    scalacOptions := scalaCompilerOptions
+  )
+  .dependsOn(simplekinesis)
 
 val awsVersion = "2.9.24"
 
