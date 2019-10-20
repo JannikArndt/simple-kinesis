@@ -1,4 +1,4 @@
-package fuckingkinesis
+package simplekinesis
 
 import java.nio.charset.StandardCharsets
 import java.time.Instant

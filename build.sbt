@@ -5,8 +5,8 @@ lazy val root = (project in file("."))
     version := "0.1.0",
     scmInfo := Some(
       ScmInfo(
-        url("https://github.com/jannikarndt/fucking-kinesis"),
-        "scm:git@github.com:jannikarndt/fucking-kinesis.git"
+        url("https://github.com/jannikarndt/simple-kinesis"),
+        "scm:git@github.com:jannikarndt/simple-kinesis.git"
       )
     ),
     developers := List(

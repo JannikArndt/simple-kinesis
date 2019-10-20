@@ -1,7 +1,7 @@
 package examples
 
 import com.typesafe.scalalogging.StrictLogging
-import fuckingkinesis._
+import simplekinesis._
 import monix.execution.Scheduler.Implicits.global
 import software.amazon.awssdk.regions.Region
 
@@ -10,7 +10,7 @@ import scala.io.StdIn
 object ConsoleExample extends App with StrictLogging {
 
   val streamName = sys.env.getOrElse("STREAM_NAME", throw new RuntimeException("Expected env var $STREAM_NAME not found!"))
-  val writer     = new FuckingKinesisWriter(Region.EU_CENTRAL_1)
+  val writer     = new SimpleKinesisWriter(Region.EU_CENTRAL_1)
 
   var running = true
   println("Start typing!")

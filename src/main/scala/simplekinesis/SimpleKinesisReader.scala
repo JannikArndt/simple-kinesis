@@ -1,9 +1,9 @@
-package fuckingkinesis
+package simplekinesis
 
 import java.util.concurrent.CompletionException
 
 import com.typesafe.scalalogging.StrictLogging
-import fuckingkinesis.Model.{KinesisRecord, ShardIterator, State}
+import simplekinesis.Model.{KinesisRecord, ShardIterator, State}
 import monix.execution.schedulers.SchedulerService
 import monix.execution.{Cancelable, Scheduler}
 import software.amazon.awssdk.regions.Region
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
   *
   * {{{
   *   val streamName    = "myStream"
-  *   val client        = new FuckingKinesisReader(Region.EU_CENTRAL_1)
+  *   val client        = new SimpleKinesisReader(Region.EU_CENTRAL_1)
   *   val shardIterator = Model.LATEST // or other
   *
   *   client.startListening(streamName, shardIterator)(1 second, 1 second) { record =>
@@ -36,17 +36,17 @@ import scala.util.{Failure, Success}
   *
   * @param region The AWS Region your Kinesis queue is located in.
   */
-class FuckingKinesisReader(region: Region) extends StrictLogging {
+class SimpleKinesisReader(region: Region) extends StrictLogging {
 
-  private implicit val schedulerService: SchedulerService = Scheduler.io("fucking-kinesis-scheduler")
+  private implicit val schedulerService: SchedulerService = Scheduler.io("simple-kinesis-scheduler")
 
-  private val fuckingKinesisWrapper = FuckingKinesisWrapper(region)
+  private val simpleKinesisWrapper = SimpleKinesisWrapper(region)
 
   private def getInitialState(streamName: String, shardIterator: ShardIterator): Future[Seq[State]] = {
     logger.debug(s"Getting initial state of stream $streamName")
     val requestInitialIterators = for {
-      shards: Seq[Shard]                   <- fuckingKinesisWrapper.listShards(streamName)
-      shardIterators: Seq[(Shard, String)] <- fuckingKinesisWrapper.getShardIterators(streamName, shards, shardIterator)
+      shards: Seq[Shard]                   <- simpleKinesisWrapper.listShards(streamName)
+      shardIterators: Seq[(Shard, String)] <- simpleKinesisWrapper.getShardIterators(streamName, shards, shardIterator)
     } yield shardIterators
 
     requestInitialIterators.map(iterators => iterators.map(res => State(res._1, res._2, Seq[KinesisRecord]())))
@@ -58,7 +58,7 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
   )(action: KinesisRecord => Unit): Future[Cancelable] = {
     logger.debug(s"Starting listening to stream $streamName")
 
-    val runner = new Runner(fuckingKinesisWrapper, delayBetweenReads, action)
+    val runner = new Runner(simpleKinesisWrapper, delayBetweenReads, action)
 
     getInitialState(streamName, shardIterator)
       .map { initialState =>
@@ -82,12 +82,12 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
   }
 
   def shutdown()(implicit executionContext: ExecutionContext): Future[Boolean] = {
-    logger.info("Starting shutdown of FuckingKinesisReader...")
+    logger.info("Starting shutdown of SimpleKinesisReader...")
 
     logger.info("Shutting down scheduler...")
     schedulerService.shutdown()
     logger.info("Shutting down netty http client and AWS client...")
-    fuckingKinesisWrapper.shutdown()
+    simpleKinesisWrapper.shutdown()
     logger.info("Waiting for scheduler to finish shutdown...")
     schedulerService
       .awaitTermination(30.seconds, monix.execution.Scheduler.global)
@@ -98,7 +98,7 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
       }(executionContext)
   }
 
-  private class Runner(fuckingKinesisWrapper: FuckingKinesisWrapper,
+  private class Runner(simpleKinesisWrapper: SimpleKinesisWrapper,
                        delayBetweenReads: FiniteDuration = 1.second,
                        action: KinesisRecord => Unit)(
       implicit schedulerService: SchedulerService
@@ -116,7 +116,7 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
       val res: Seq[Future[State]] = lastState.map { state =>
         logger.debug(s"Reading new state...")
 
-        fuckingKinesisWrapper
+        simpleKinesisWrapper
           .getRecordsFromIterator(state.shardIterator)
           .map(res => State(state.shard, res.nextShardIterator, res.records.map(KinesisRecord.apply)))
       }

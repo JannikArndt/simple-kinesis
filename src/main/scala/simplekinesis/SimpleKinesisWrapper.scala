@@ -1,7 +1,7 @@
-package fuckingkinesis
+package simplekinesis
 
 import com.typesafe.scalalogging.StrictLogging
-import fuckingkinesis.Model._
+import simplekinesis.Model._
 import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient
@@ -17,8 +17,8 @@ import scala.jdk.CollectionConverters._
 /**
   * A thin wrapper of Scala-love around the worst SDK I've ever seen.
   */
-object FuckingKinesisWrapper extends StrictLogging {
-  def apply(region: Region)(implicit executionContext: ExecutionContext): FuckingKinesisWrapper = {
+object SimpleKinesisWrapper extends StrictLogging {
+  def apply(region: Region)(implicit executionContext: ExecutionContext): SimpleKinesisWrapper = {
 
     val nettyClient: SdkAsyncHttpClient =
       NettyNioAsyncHttpClient.builder().maxConcurrency(100).maxPendingConnectionAcquires(10000).build()
@@ -26,11 +26,11 @@ object FuckingKinesisWrapper extends StrictLogging {
     val kinesisClient: KinesisAsyncClient =
       KinesisAsyncClient.builder().httpClient(nettyClient).region(region).build()
 
-    new FuckingKinesisWrapper(kinesisClient, nettyClient)
+    new SimpleKinesisWrapper(kinesisClient, nettyClient)
   }
 }
 
-class FuckingKinesisWrapper private (awsClient: KinesisAsyncClient, httpClient: SdkAsyncHttpClient)(
+class SimpleKinesisWrapper private (awsClient: KinesisAsyncClient, httpClient: SdkAsyncHttpClient)(
     implicit executionContext: ExecutionContext
 ) extends StrictLogging {
 
