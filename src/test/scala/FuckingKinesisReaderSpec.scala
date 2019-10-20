@@ -19,7 +19,7 @@ class FuckingKinesisReaderSpec extends FlatSpecLike with Matchers {
     val future  = promise.future
 
     // when we're listening
-    reader.startListening(streamName, Model.LATEST)(1 second, 1 second) { record =>
+    reader.startListening(streamName, Model.LATEST)(1.second, 1.second) { record =>
       promise.success(record.dataAsString)
     }
 
@@ -27,7 +27,7 @@ class FuckingKinesisReaderSpec extends FlatSpecLike with Matchers {
     writer.write(streamName, "success")
 
     // then
-    Await.result(future, 30 seconds) shouldBe "success"
+    Await.result(future, 30.seconds) shouldBe "success"
 
     // clean up
     writer.shutdown()

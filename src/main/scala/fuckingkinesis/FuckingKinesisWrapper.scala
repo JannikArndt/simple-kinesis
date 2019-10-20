@@ -97,7 +97,7 @@ class FuckingKinesisWrapper private (awsClient: KinesisAsyncClient, httpClient: 
     awsClient
       .getRecords(request)
       .toScala
-      .map(res => KinesisRecordsResponse(res.records().asScala.toSeq, res.nextShardIterator(), res.millisBehindLatest().longValue() millis))
+      .map(res => KinesisRecordsResponse(res.records().asScala.toSeq, res.nextShardIterator(), res.millisBehindLatest().longValue().millis))
   }
 
   def putRecord(streamName: String, partitionKey: String, utf8String: String): Future[PutRecords] =

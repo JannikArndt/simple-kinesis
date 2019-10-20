@@ -53,8 +53,8 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
   }
 
   def startListening(streamName: String, shardIterator: ShardIterator)(
-      initialDelay: FiniteDuration = 1 second,
-      delayBetweenReads: FiniteDuration = 1 second
+      initialDelay: FiniteDuration = 1.second,
+      delayBetweenReads: FiniteDuration = 1.second
   )(action: KinesisRecord => Unit): Future[Cancelable] = {
     logger.debug(s"Starting listening to stream $streamName")
 
@@ -99,7 +99,7 @@ class FuckingKinesisReader(region: Region) extends StrictLogging {
   }
 
   private class Runner(fuckingKinesisWrapper: FuckingKinesisWrapper,
-                       delayBetweenReads: FiniteDuration = 1 second,
+                       delayBetweenReads: FiniteDuration = 1.second,
                        action: KinesisRecord => Unit)(
       implicit schedulerService: SchedulerService
   ) extends StrictLogging {

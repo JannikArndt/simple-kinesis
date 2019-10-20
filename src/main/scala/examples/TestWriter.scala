@@ -20,7 +20,7 @@ class TestWriter(streamName: String) extends StrictLogging {
 
   val writer = new FuckingKinesisWriter(Region.EU_CENTRAL_1)
 
-  schedulerService.scheduleAtFixedRate(1 second, 3 seconds) {
+  schedulerService.scheduleAtFixedRate(1.second, 3.seconds) {
     writer.write(streamName, s"Sending message at ${LocalDateTime.now().toString}.")
     ()
   }
