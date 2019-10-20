@@ -29,11 +29,11 @@ lazy val root = (project in file("."))
 Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / turbo := true
 
-val awsVersion = "2.9.9"
+val awsVersion = "2.9.24"
 
 lazy val dependencies = Seq(
   "org.scala-lang.modules"     %% "scala-java8-compat"      % "0.9.0",
-  "org.scala-lang.modules"     %% "scala-collection-compat" % "2.1.1",
+  "org.scala-lang.modules"     %% "scala-collection-compat" % "2.1.2",
   "io.monix"                   %% "monix-execution"         % "3.0.0",
   "com.typesafe.scala-logging" %% "scala-logging"           % "3.9.2",
   "org.slf4j"                  % "slf4j-simple"             % "1.7.28",
