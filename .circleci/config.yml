@@ -23,6 +23,8 @@ jobs:
   test:
     docker:
       - image: circleci/openjdk:8u222
+    environment:
+      - STREAM_NAME: "test-stream"
     steps:
       - checkout
 
