@@ -3,7 +3,7 @@ package examples
 import java.time.LocalDateTime
 
 import com.typesafe.scalalogging.StrictLogging
-import fuckingkinesis.FuckingKinesisWriter
+import simplekinesis.SimpleKinesisWriter
 import monix.execution.Scheduler
 import monix.execution.schedulers.SchedulerService
 import software.amazon.awssdk.regions.Region
@@ -18,9 +18,9 @@ import scala.util.{Failure, Success}
 class TestWriter(streamName: String) extends StrictLogging {
   implicit private val schedulerService: SchedulerService = Scheduler.io("test-writer")
 
-  val writer = new FuckingKinesisWriter(Region.EU_CENTRAL_1)
+  val writer = new SimpleKinesisWriter(Region.EU_CENTRAL_1)
 
-  schedulerService.scheduleAtFixedRate(1 second, 3 seconds) {
+  schedulerService.scheduleAtFixedRate(1.second, 3.seconds) {
     writer.write(streamName, s"Sending message at ${LocalDateTime.now().toString}.")
     ()
   }

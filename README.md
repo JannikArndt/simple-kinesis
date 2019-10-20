@@ -1,26 +1,25 @@
-# Fucking Kinesis
+# Simple Kinesis
 
 A Scala client for AWS Kinesis:
 
-* based on the _fucking_ AWS Java SDK _Version 2_ (async!)
-* based on the _fucking_ latest version of that
-* made for _fucking_ humans to use
-* written out of _fucking_ hate
+* based on the AWS Java SDK _Version 2_ (async!)
+* based on the latest version of that
+* made for humans to use
 
 ## Reading from Kinesis
 
-It's _fucking_ easy: 
+It's easy: 
 
 ```scala
-import fuckingkinesis._
+import simplekinesis._
 import monix.execution.Scheduler.Implicits.global
 import software.amazon.awssdk.regions.Region
 import scala.concurrent.duration._
 
 val streamName    = "my-stream-name"
-val reader        = new FuckingKinesisReader(Region.EU_CENTRAL_1)
+val reader        = new SimpleKinesisReader(Region.EU_CENTRAL_1)
 
-reader.startListening(streamName, Model.LATEST)(1 second, 1 second) { record =>
+reader.startListening(streamName, Model.LATEST)(1.second, 1.second) { record =>
   // do something with record!
 }
 
@@ -32,11 +31,11 @@ reader.shutdown()
 ## Writing to Kinesis
 
 ```scala
-import fuckingkinesis._
+import simplekinesis._
 import software.amazon.awssdk.regions.Region
 
 val streamName = "my-stream-name"
-val writer     = new FuckingKinesisWriter(Region.EU_CENTRAL_1)
+val writer     = new SimpleKinesisWriter(Region.EU_CENTRAL_1)
 
 writer.write(streamName, "Hallo Welt!")
 
@@ -57,7 +56,7 @@ and from that set your `AWS_SESSION_TOKEN`.
 There are a few examples that you can run using `sbt`:
 
 ```sbt
-sbt:fuckingkinesis> runMain examples.ReadAndWriteExample
+sbt:simplekinesis> runMain examples.ReadAndWriteExample
 ```
 
 ## Mental Model

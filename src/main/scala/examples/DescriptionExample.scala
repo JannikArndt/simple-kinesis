@@ -1,7 +1,7 @@
 package examples
 
 import com.typesafe.scalalogging.StrictLogging
-import fuckingkinesis.FuckingKinesisWrapper
+import simplekinesis.SimpleKinesisWrapper
 import monix.execution.Scheduler.Implicits.global
 import software.amazon.awssdk.regions.Region
 
@@ -13,7 +13,7 @@ object DescriptionExample extends App with StrictLogging {
   val stream = sys.env.getOrElse("STREAM_NAME", throw new RuntimeException("Expected env var $STREAM_NAME not found!"))
 
   // you usually don't want to use the Wrapper directly
-  val wrapper = FuckingKinesisWrapper(Region.EU_CENTRAL_1)
+  val wrapper = SimpleKinesisWrapper(Region.EU_CENTRAL_1)
 
   val streamDescription = Await.result(wrapper.describeStream(stream), Duration.Inf)
   logger.info(s"Stream: $streamDescription\n\n")
