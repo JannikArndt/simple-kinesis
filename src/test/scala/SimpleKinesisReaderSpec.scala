@@ -10,7 +10,7 @@ class SimpleKinesisReaderSpec extends FlatSpecLike with Matchers {
 
   val streamName: String = sys.env.getOrElse("STREAM_NAME", throw new RuntimeException("Expected env var $STREAM_NAME not found!"))
 
-  "SimpleKinesisReader" should "read from Kinesis" in {
+  "SimpleKinesisReader" should "read from Kinesis" ignore {
     // given
     val reader = new SimpleKinesisReader(Region.EU_CENTRAL_1)
     val writer = new SimpleKinesisWriter(Region.EU_CENTRAL_1)
